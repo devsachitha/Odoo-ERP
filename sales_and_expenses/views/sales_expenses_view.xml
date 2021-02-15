@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--        Action for call res partner as Vendor-->
+        <record id="action_doctor_contacts" model="ir.actions.act_window">
+            <field name="name">Doctors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="context">{'res_partner_search_mode': 'supplier'}</field>
+            <field name="domain">[('partner_type', '=', 'doctor')]</field>
+        </record>
+
+        <!-- Action for call res partner as Customer-->
+        <record id="action_pharmacy_contacts" model="ir.actions.act_window">
+            <field name="name">Pharmacies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="context">{'res_partner_search_mode': 'customer'}</field>
+            <field name="domain">[('partner_type', '=', 'customer')]</field>
+        </record>
+
+        <!--        main menu tile-->
+        <menuitem name="Sales and Expenses"
+                  id="menu_sales_and_expenses"
+                  sequence="20"
+                  web_icon="sales_and_expenses,static/description/icon.png"
+                  groups="base.group_user"/>
+
+        <menuitem id="doctors_details_menu"
+                  name="Doctors Info"
+                  parent="menu_sales_and_expenses"
+                  groups="base.group_user"
+                  sequence="2"/>
+
+        <menuitem id="pharmacy_details_menu"
+                  name="Pharmacies"
+                  parent="menu_sales_and_expenses"
+                  groups="base.group_user"
+                  sequence="3"/>
+
+        <menuitem id="doctor_profiles"
+                  name="Doctors"
+                  parent="doctors_details_menu"
+                  action="action_doctor_contacts"
+                  groups="base.group_user"
+                  sequence="4"/>
+
+        <menuitem id="doctor_expenses"
+                  name="Doctors Expenses"
+                  parent="doctors_details_menu"
+                  action="action_doctor_expenses"
+                  groups="base.group_user"
+                  sequence="5"/>
+
+        <menuitem id="pharmacy_profiles"
+                  name="Pharmacies"
+                  parent="pharmacy_details_menu"
+                  action="action_pharmacy_contacts"
+                  groups="base.group_user"
+                  sequence="6"/>
+
+        <menuitem id="report_menu"
+                  name="Reports"
+                  parent="menu_sales_and_expenses"
+                  groups="base.group_user"
+                  sequence="7"/>
+
+<!--        <menuitem id="pharmacy_profiles_x"-->
+<!--                  name="Pharmacies X"-->
+<!--                  parent="pharmacy_details_menu"-->
+<!--                  action="open_sales_expenses_report_wizard"-->
+<!--                  groups="base.group_user"-->
+<!--                  sequence="8"/>-->
+
+        <!--        View actions for Doctors Kanban , Form, Tree Views-->
+        <record id="action_partner_doctor_form_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_doctor_contacts"/>
+        </record>
+        <record id="action_partner_doctor_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_doctor_contacts"/>
+        </record>
+        <record id="action_partner_doctor_form_view3" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_doctor_contacts"/>
+        </record>
+
+        <!--        View actions for Pharmacies Kanban , Form, Tree Views-->
+        <record id="action_partner_pharmacy_form_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_pharmacy_contacts"/>
+        </record>
+        <record id="action_partner_pharmacy_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="base.view_partner_tree"/>
+            <field name="act_window_id" ref="action_pharmacy_contacts"/>
+        </record>
+        <record id="action_partner_pharmacy_form_view3" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_pharmacy_contacts"/>
+        </record>
+
+
+        <!-- Form view for Doctor Expenses -->
+        <record id="doctor_expense_view_form" model="ir.ui.view">
+            <field name="name">doctor.expenses.view.form</field>
+            <field name="model">doctor.expenses</field>
+            <field name="arch" type="xml">
+                <form string="Doctors Expenses">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="doctor_id"/>
+                                <field name="date"/>
+                                <field name="product_id"/>
+
+                            </group>
+                            <group>
+                                <field name="thirdparty_payee"/>
+                                <field name="unit_amount" required="1" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>/>
+                                <field name="quantity"/>
+                                <field name="total_amount" widget='monetary'
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tree view for Doctor Expenses -->
+        <record id="doctor_expense_view_tree" model="ir.ui.view">
+            <field name="name">doctor.expenses.tree</field>
+            <field name="model">doctor.expenses</field>
+            <field name="arch" type="xml">
+                <tree string="Doctor Expenses" multi_edit="1">
+                    <field name="doctor_id"/>
+                    <field name="date"/>
+                    <field name="product_id"/>
+                    <field name="thirdparty_payee"/>
+                    <field name="unit_amount"/>
+                    <field name="quantity"/>
+                    <field name="total_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_doctor_expenses" model="ir.actions.act_window">
+            <field name="name">Doctors Expenses</field>
+            <field name="res_model">doctor.expenses</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No data yet!
+                </p>
+                <p>
+                    Create new expenses .
+                </p>
+            </field>
+        </record>
+
+        <record id="doctors_all_expenses_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="doctor_expense_view_tree"/>
+            <field name="act_window_id" ref="action_doctor_expenses"/>
+        </record>
+
+        <record id="doctors_expense_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="doctor_expense_view_form"/>
+            <field name="act_window_id" ref="action_doctor_expenses"/>
+        </record>
+
+        <!-- Res partner form inherit-->
+        <record id="res_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='vat']" position="after">
+                        <field name="partner_type"/>
+                    </xpath>
+
+                    <xpath expr="//notebook/page[@name='internal_notes']" position="after">
+                        <page name="pharmacies" string="Pharmacy Details"
+                              attrs="{'invisible' : [('partner_type', '!=', 'doctor')]}" groups="base.group_user">
+                            <field name="depend_pharmacies" placeholder="Child Pharmacies"
+                                   domain="[('partner_type', '=', 'pharmacy')]">
+                                <tree editable="bottom">
+                                    <field name="display_name"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                    <field name="city"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page name="expenses" string="Doctor Expenses"
+                              attrs="{'invisible' : [('partner_type', '!=', 'doctor')]}" groups="base.group_user">
+                            <field name="expenses" placeholder="Expenses">
+                                <tree editable="bottom">
+                                    <field name="doctor_id"/>
+                                    <field name="date"/>
+                                    <field name="product_id"/>
+                                    <field name="thirdparty_payee"/>
+                                    <field name="unit_amount"/>
+                                    <field name="quantity"/>
+                                    <field name="total_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+<!--        <record id="view_mrp_product_done_wizard" model="ir.ui.view">-->
+<!--            <field name="name">mrp.product.produce.wizard.view</field>-->
+<!--            <field name="model">mrp.product.produce.wizard</field>-->
+<!--            <field name="type">form</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form>-->
+<!--                    <group>-->
+<!--                        <field name="date_from"/>-->
+<!--                    </group>-->
+<!--                    <group>-->
+<!--                        <field name="date_to"/>-->
+<!--                    </group>-->
+<!--                    <footer>-->
+<!--                        <button name="action_print" string="Generate" type="object" class="oe_highlight"/>-->
+<!--                        <button string="Cancel" class="btn btn-default" special="cancel"/>-->
+<!--                    </footer>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="open_report_wizard" model="ir.actions.act_window">-->
+<!--            <field name="name">Expenses and Sales</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">sales.expenses.wizard</field>-->
+<!--            <field name="view_mode">form</field>-->
+<!--            <field name="view_id" ref="view_mrp_product_done_wizard"/>-->
+<!--            <field name="target">new</field>-->
+<!--        </record>-->
+
+<!--        <menuitem id="sales_expenses_report"-->
+<!--                  name="Sales and Expenses Report"-->
+<!--                  parent="report_menu"-->
+<!--                  action="open_report_wizard"-->
+<!--                  groups="base.group_user"-->
+<!--                  sequence="8"/>-->
+
+
+    </data>
+</odoo>

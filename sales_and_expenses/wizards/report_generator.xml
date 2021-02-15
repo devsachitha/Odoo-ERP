@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_sales_expenses_wizard" model="ir.ui.view">
+            <field name="name">sales.and.expenses.view.wizard</field>
+            <field name="model">sales.expenses.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="date_from"/>
+                    </group>
+                    <group>
+                        <field name="date_to"/>
+                    </group>
+                    <footer>
+<!--                        <button name="action_print" string="Generate" type="object" class="oe_highlight"/>-->
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_sales_expenses_report_wizard" model="ir.actions.act_window">
+            <field name="name">Expenses and Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sales.expenses.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_sales_expenses_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
